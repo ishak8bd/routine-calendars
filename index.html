@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#0d1117">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="description" content="Clean multi-calendar routine & habit organizer with 100% free native phone alarms">
+  <title>RoutineMaster • Multi-Calendar & Routines</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css">
+  <!-- Modern Clean Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div id="app-container">
+    <!-- Top Context Bar -->
+    <header class="app-header">
+      <div class="header-left">
+        <div class="month-selector-wrap">
+          <button id="prev-month-btn" class="icon-btn" aria-label="Previous Month">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+          </button>
+          <div class="month-title-group" id="month-year-picker-btn">
+            <h1 id="current-month-display">October</h1>
+            <span id="current-year-display">2026</span>
+          </div>
+          <button id="next-month-btn" class="icon-btn" aria-label="Next Month">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+          </button>
+        </div>
+      </div>
+      
+      <div class="header-right">
+        <button id="today-btn" class="pill-btn small-pill" title="Jump to Today">Today</button>
+        <!-- Phone Alarms Sync Button -->
+        <button id="sync-alarms-btn" class="icon-pill-btn highlight-pill" title="Sync Phone Hardware Alarms">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+          <span>Sync Alarms</span>
+        </button>
+        <button id="settings-menu-btn" class="icon-btn" aria-label="Settings & Backup">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Sticky Horizontal Calendar Layers Ribbon -->
+    <nav class="calendar-ribbon-wrapper">
+      <div class="calendar-ribbon" id="calendar-ribbon">
+        <!-- Rendered dynamically: Global, Work, Gym, Running, Hair/Face, Birthdays, etc. -->
+      </div>
+      <button id="add-calendar-type-btn" class="ribbon-add-btn" title="Create New Calendar Type">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+        <span>New</span>
+      </button>
+    </nav>
+
+    <!-- Month Calendar Matrix Section -->
+    <main class="calendar-matrix-card">
+      <!-- Weekday Labels -->
+      <div class="weekdays-grid">
+        <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+      </div>
+
+      <!-- Days Grid (42 cells dynamically populated) -->
+      <div class="days-grid" id="days-grid">
+        <!-- Injected via JavaScript -->
+      </div>
+
+      <!-- Quick Summary / Active Filter Indicator -->
+      <div class="grid-footer-info" id="grid-filter-status">
+        <span class="status-dot"></span>
+        <span id="active-filter-label">Showing All Calendars (Global View)</span>
+        <button id="open-layer-filter-btn" class="footer-filter-btn" title="Open Layer Filter Matrix">⚡ Filter Layers</button>
+      </div>
+    </main>
+
+    <!-- Tactile Day Agenda & Routine Deck (Drawer / Bottom Sheet) -->
+    <section class="day-deck-card" id="day-deck">
+      <div class="deck-header">
+        <div class="deck-title-wrap">
+          <span class="deck-badge" id="deck-day-badge">Today</span>
+          <h2 id="deck-date-title">Wednesday, October 21</h2>
+        </div>
+        <button id="add-routine-btn" class="primary-add-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          <span>Add Routine</span>
+        </button>
+      </div>
+
+      <!-- Routines List -->
+      <div class="routines-list" id="routines-list">
+        <!-- Injected via JavaScript -->
+      </div>
+    </section>
+  </div>
+
+  <!-- ==================== MODALS ==================== -->
+
+  <!-- Layer Filter Matrix Modal (Toggle Layers in Global View) -->
+  <div class="modal-backdrop" id="layer-filter-modal" aria-hidden="true">
+    <div class="modal-sheet">
+      <div class="modal-grabber"></div>
+      <div class="modal-header">
+        <div>
+          <div class="filter-modal-badge">🌐 Global Mode Lens</div>
+          <h3>Filter Layer Matrix</h3>
+        </div>
+        <button class="close-modal-btn" data-close="layer-filter-modal">&times;</button>
+      </div>
+
+      <div class="layer-filter-body">
+        <p class="layer-filter-desc">
+          Toggle which calendar layers are visible in your Global View. Uncheck any layer to temporarily hide its events from the calendar grid.
+        </p>
+
+        <div class="layer-filter-toolbar">
+          <button type="button" id="filter-select-all-btn" class="pill-btn small-pill">Select All</button>
+          <button type="button" id="filter-deselect-all-btn" class="pill-btn small-pill">Clear All</button>
+          <span class="active-count-text" id="layer-active-count-text">5 of 5 visible</span>
+        </div>
+
+        <!-- Dynamic list of layer checkboxes -->
+        <div class="layer-toggles-list" id="layer-toggles-list">
+          <!-- Injected via JavaScript -->
+        </div>
+
+        <div class="modal-actions" style="margin-top: 14px;">
+          <button type="button" class="btn-primary flex-1" data-close="layer-filter-modal">Apply & Done</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 0. Event Details Sheet (View Notes, Steps & Details) -->
+  <div class="modal-backdrop" id="event-details-modal" aria-hidden="true">
+    <div class="modal-sheet">
+      <div class="modal-grabber"></div>
+      <div class="modal-header">
+        <div class="details-category-pill" id="details-category-pill">
+          <span id="details-cat-emoji">🏋️</span>
+          <span id="details-cat-name">Gym Days</span>
+        </div>
+        <button class="close-modal-btn" data-close="event-details-modal">&times;</button>
+      </div>
+
+      <div class="details-modal-body">
+        <h2 id="details-event-title" class="details-title">Push Workout (Chest & Triceps)</h2>
+        
+        <div class="details-meta-grid">
+          <div class="details-meta-card">
+            <span class="meta-label">Date & Time</span>
+            <div class="meta-value" id="details-date-time">Wed, Oct 21 • 17:30</div>
+          </div>
+          <div class="details-meta-card">
+            <span class="meta-label">Recurrence</span>
+            <div class="meta-value" id="details-recurrence">Every 2 days</div>
+          </div>
+          <div class="details-meta-card">
+            <span class="meta-label">Hardware Alarm</span>
+            <div class="meta-value" id="details-alarm-info">🔔 15m before</div>
+          </div>
+          <div class="details-meta-card">
+            <span class="meta-label">Status</span>
+            <div class="meta-value" id="details-status-badge">Pending</div>
+          </div>
+        </div>
+
+        <!-- Notes / Routine Steps Box -->
+        <div class="details-notes-box">
+          <div class="notes-header">
+            <span>📝 Routine Notes & Steps</span>
+          </div>
+          <div class="notes-content" id="details-notes-content">
+            No notes added for this routine.
+          </div>
+        </div>
+
+        <div class="details-action-bar">
+          <button type="button" id="details-toggle-done-btn" class="btn-primary flex-1">
+            <span id="details-done-btn-text">Mark Completed ✅</span>
+          </button>
+          <button type="button" id="details-edit-btn" class="btn-secondary">
+            <span>✏️ Edit</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 1. Add / Edit Routine Modal -->
+  <div class="modal-backdrop" id="routine-modal" aria-hidden="true">
+    <div class="modal-sheet">
+      <div class="modal-grabber"></div>
+      <div class="modal-header">
+        <h3 id="routine-modal-title">Schedule Routine</h3>
+        <button class="close-modal-btn" data-close="routine-modal">&times;</button>
+      </div>
+      
+      <form id="routine-form" class="modal-form">
+        <input type="hidden" id="routine-id">
+        <input type="hidden" id="routine-date">
+
+        <div class="form-group">
+          <label for="routine-calendar-select">Calendar Category</label>
+          <div class="custom-select-wrap">
+            <select id="routine-calendar-select" required>
+              <!-- Populated dynamically with user's calendars -->
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="routine-title-input">Routine / Event Title</label>
+          <input type="text" id="routine-title-input" placeholder="e.g. Leg Day (Squat 80kg), Rosemary Oil Scalp..." required>
+        </div>
+
+        <!-- Date & Multi-Day Date Range -->
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label for="routine-date-input">Start Date</label>
+            <input type="date" id="routine-date-input" required>
+          </div>
+          <div class="form-group flex-1">
+            <label for="routine-end-date-input">End Date <span class="label-badge-optional">Multi-day</span></label>
+            <input type="date" id="routine-end-date-input">
+          </div>
+        </div>
+        <div id="multi-day-preview-badge" class="multi-day-indicator hidden">
+          <span>📅 Spans <strong id="multi-day-count-text">3 days</strong></span>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label for="routine-time-input">Time (Optional)</label>
+            <input type="time" id="routine-time-input" value="09:00">
+          </div>
+          <div class="form-group flex-1">
+            <label for="routine-repeat-select">Recurrence</label>
+            <select id="routine-repeat-select">
+              <option value="none">One-time only</option>
+              <option value="daily">Every day</option>
+              <option value="interval:2">Every 2 days</option>
+              <option value="interval:3">Every 3 days</option>
+              <option value="interval:4">Every 4 days</option>
+              <option value="weekly">Every week</option>
+              <option value="biweekly">Every 2 weeks</option>
+              <option value="monthly">Monthly</option>
+              <option value="yearly">Yearly (Birthdays/Anniv.)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="routine-alarm-select">Hardware Phone Alarm (RFC 5545)</label>
+          <select id="routine-alarm-select">
+            <option value="exact">🔔 At exact routine time</option>
+            <option value="15m" selected>🔔 15 minutes before</option>
+            <option value="30m">🔔 30 minutes before</option>
+            <option value="1h">🔔 1 hour before</option>
+            <option value="1d">🔔 1 day before (at 09:00 AM)</option>
+            <option value="none">No alarm</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="routine-notes-input">Notes / Routine Steps</label>
+          <textarea id="routine-notes-input" rows="2" placeholder="e.g. Wash with sulfate-free shampoo, leave mask for 20m..."></textarea>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" data-close="routine-modal">Cancel</button>
+          <button type="button" id="delete-routine-btn" class="btn-danger hidden">Delete</button>
+          <button type="submit" class="btn-primary">Save Routine</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 2. Create / Edit Calendar Type Modal -->
+  <div class="modal-backdrop" id="calendar-type-modal" aria-hidden="true">
+    <div class="modal-sheet">
+      <div class="modal-grabber"></div>
+      <div class="modal-header">
+        <h3 id="cal-modal-title">New Calendar Type</h3>
+        <button class="close-modal-btn" data-close="calendar-type-modal">&times;</button>
+      </div>
+
+      <form id="calendar-type-form" class="modal-form">
+        <input type="hidden" id="edit-calendar-id">
+
+        <!-- Live Preview Pill -->
+        <div class="preview-box">
+          <span class="preview-label">Live Appearance:</span>
+          <div class="sample-pill" id="live-preview-pill">
+            <span id="preview-emoji">🏋️</span>
+            <span id="preview-text">Gym Days</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="cal-name-input">Calendar Name</label>
+          <input type="text" id="cal-name-input" placeholder="e.g. Reading, Plant Care, Meditation, Piano..." required>
+        </div>
+
+        <div class="form-group">
+          <label>Pick Emoji Icon</label>
+          <div class="emoji-selector-grid" id="emoji-picker-grid">
+            <!-- Popular emojis generated via JS -->
+          </div>
+          <input type="text" id="custom-emoji-input" placeholder="Or enter any custom emoji" maxlength="2" class="custom-emoji-field">
+        </div>
+
+        <div class="form-group">
+          <label>Accent Color Swatch</label>
+          <div class="color-palette-grid" id="color-palette-grid">
+            <!-- 12 curated vibrant colors -->
+          </div>
+          <input type="hidden" id="selected-cal-color" value="#6366F1">
+        </div>
+
+        <div class="form-group">
+          <label for="cal-default-time">Default Reminder Time</label>
+          <input type="time" id="cal-default-time" value="09:00">
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" data-close="calendar-type-modal">Cancel</button>
+          <button type="button" id="delete-calendar-btn" class="btn-danger hidden">Delete Calendar</button>
+          <button type="submit" class="btn-primary">Save Calendar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 3. Hardware Phone Alarms Sync Modal (.ics / WebCal) -->
+  <div class="modal-backdrop" id="sync-modal" aria-hidden="true">
+    <div class="modal-sheet">
+      <div class="modal-grabber"></div>
+      <div class="modal-header">
+        <div class="sync-modal-badge">⚡ 100% Offline • Hardware Priority</div>
+        <h3>Sync Phone Hardware Alarms</h3>
+        <button class="close-modal-btn" data-close="sync-modal">&times;</button>
+      </div>
+
+      <div class="sync-modal-body">
+        <p class="sync-explainer">
+          Export your schedules directly to your phone's native calendar (Apple Calendar or Google Calendar) with embedded <strong>sound & banner alarms</strong>.
+        </p>
+
+        <div class="sync-feature-card">
+          <div class="feature-item">
+            <span class="check-icon">✓</span>
+            <div><strong>Works when phone is in Deep Sleep / Battery Saver</strong></div>
+          </div>
+          <div class="feature-item">
+            <span class="check-icon">✓</span>
+            <div><strong>Never killed from RAM (handled by iOS / Android system kernel)</strong></div>
+          </div>
+          <div class="feature-item">
+            <span class="check-icon">✓</span>
+            <div><strong>$0 cost, zero servers, 100% private to your device</strong></div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="sync-calendar-target">Select Calendar to Sync</label>
+          <select id="sync-calendar-target">
+            <option value="all">🌟 All Active Calendars (Combined)</option>
+            <!-- Injected dynamically with user calendars -->
+          </select>
+        </div>
+
+        <div class="sync-actions-group">
+          <button type="button" id="export-ics-btn" class="sync-big-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            <div class="btn-text-block">
+              <span class="main-label">Download & Add to Phone Calendar (.ics)</span>
+              <span class="sub-label">One tap to add all alarms directly into iPhone or Android Calendar</span>
+            </div>
+          </button>
+        </div>
+
+        <div class="sync-instructions">
+          <h4>📱 How to import on your device:</h4>
+          <ul>
+            <li><strong>iPhone (Safari):</strong> Tap the download button $\rightarrow$ Tap <em>"Add All"</em> when Apple Calendar prompts you.</li>
+            <li><strong>Android:</strong> Open the downloaded <code>.ics</code> file with Google Calendar $\rightarrow$ Tap <em>"Import All"</em>.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Settings & Backup Modal -->
+  <div class="modal-backdrop" id="settings-modal" aria-hidden="true">
+    <div class="modal-sheet">
+      <div class="modal-grabber"></div>
+      <div class="modal-header">
+        <h3>Settings & Data Management</h3>
+        <button class="close-modal-btn" data-close="settings-modal">&times;</button>
+      </div>
+
+      <div class="settings-modal-body">
+        <div class="setting-row">
+          <div>
+            <div class="setting-title">In-App Browser Notifications</div>
+            <div class="setting-desc">Instant notification prompts while browsing</div>
+          </div>
+          <button id="enable-web-notify-btn" class="pill-btn small-pill">Enable</button>
+        </div>
+
+        <div class="setting-section">
+          <h4>💾 Backup & Transfer</h4>
+          <p class="setting-desc">Keep a safe backup copy or transfer your routines to another phone.</p>
+          <div class="backup-btn-grid">
+            <button id="export-json-btn" class="btn-secondary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              Export JSON Backup
+            </button>
+            <label class="btn-secondary file-upload-label">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+              Import JSON
+              <input type="file" id="import-json-file" accept=".json" class="hidden-input">
+            </label>
+          </div>
+        </div>
+
+        <div class="setting-section">
+          <h4>🧹 Reset</h4>
+          <button id="reset-data-btn" class="btn-danger-outline">Reset to Default Sample Data</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification Toast -->
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
