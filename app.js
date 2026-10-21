@@ -304,6 +304,7 @@
     daysGrid: document.getElementById('days-grid'),
     filterStatusLabel: document.getElementById('active-filter-label'),
     openLayerFilterBtn: document.getElementById('open-layer-filter-btn'),
+    calendarsMenuBtn: document.getElementById('calendars-menu-btn'),
     deckDayBadge: document.getElementById('deck-day-badge'),
     deckDateTitle: document.getElementById('deck-date-title'),
     routinesList: document.getElementById('routines-list'),
@@ -313,6 +314,10 @@
     toast: document.getElementById('toast'),
 
     // Modals
+    calendarsMenuModal: document.getElementById('calendars-menu-modal'),
+    calendarsMenuList: document.getElementById('calendars-menu-list'),
+    menuModalAddCalBtn: document.getElementById('menu-modal-add-cal-btn'),
+
     layerFilterModal: document.getElementById('layer-filter-modal'),
     layerTogglesList: document.getElementById('layer-toggles-list'),
     layerActiveCountText: document.getElementById('layer-active-count-text'),
@@ -1015,6 +1020,87 @@
   }
 
   // ==========================================
+  // CALENDARS MENU MODAL (3-Dots Sheet)
+  // ==========================================
+  function openCalendarsMenuModal() {
+    renderCalendarsMenuList();
+    openModal(el.calendarsMenuModal);
+  }
+
+  function renderCalendarsMenuList() {
+    el.calendarsMenuList.innerHTML = '';
+
+    // 1. "Global View" item
+    const isGlobal = state.activeFilter === 'global';
+    const globalRow = document.createElement('div');
+    globalRow.className = `calendars-menu-item ${isGlobal ? 'active-cal' : ''}`;
+    globalRow.style.setProperty('--item-active-bg', 'rgba(99, 102, 241, 0.18)');
+    globalRow.style.setProperty('--item-active-border', '#6366f1');
+
+    globalRow.innerHTML = `
+      <div class="menu-item-left">
+        <span class="menu-item-emoji">🌐</span>
+        <div class="menu-item-info">
+          <span class="menu-item-name">Global Calendar</span>
+          <span class="menu-item-count">${state.routines.length} total events • All active layers</span>
+        </div>
+      </div>
+      <div class="menu-item-right">
+        ${isGlobal ? '<span class="menu-item-active-badge">Active</span>' : ''}
+        <span class="layer-color-dot-indicator" style="background: linear-gradient(135deg, #6366f1, #ec4899);"></span>
+      </div>
+    `;
+
+    globalRow.addEventListener('click', () => {
+      state.activeFilter = 'global';
+      updateFilterDisplay();
+      closeModal(el.calendarsMenuModal);
+    });
+
+    el.calendarsMenuList.appendChild(globalRow);
+
+    // 2. Individual Calendars
+    state.calendars.forEach(cal => {
+      const isActive = state.activeFilter === cal.id;
+      const count = state.routines.filter(r => r.calendarId === cal.id).length;
+
+      const row = document.createElement('div');
+      row.className = `calendars-menu-item ${isActive ? 'active-cal' : ''}`;
+      row.style.setProperty('--item-active-bg', `${cal.color}22`);
+      row.style.setProperty('--item-active-border', cal.color);
+
+      row.innerHTML = `
+        <div class="menu-item-left">
+          <span class="menu-item-emoji">${cal.icon}</span>
+          <div class="menu-item-info">
+            <span class="menu-item-name">${escapeHtml(cal.name)}</span>
+            <span class="menu-item-count">${count} ${count === 1 ? 'event' : 'events'} scheduled</span>
+          </div>
+        </div>
+        <div class="menu-item-right">
+          ${isActive ? '<span class="menu-item-active-badge">Active</span>' : ''}
+          <span class="layer-color-dot-indicator" style="background-color: ${cal.color};"></span>
+          <button type="button" class="menu-item-edit-btn" title="Edit ${escapeHtml(cal.name)}">⚙️</button>
+        </div>
+      `;
+
+      row.addEventListener('click', (e) => {
+        if (e.target.classList.contains('menu-item-edit-btn')) {
+          e.stopPropagation();
+          closeModal(el.calendarsMenuModal);
+          openEditCalendarModal(cal.id);
+        } else {
+          state.activeFilter = cal.id;
+          updateFilterDisplay();
+          closeModal(el.calendarsMenuModal);
+        }
+      });
+
+      el.calendarsMenuList.appendChild(row);
+    });
+  }
+
+  // ==========================================
   // LAYER FILTER MATRIX (Global Mode Multi-Layer Toggle)
   // ==========================================
   function openLayerFilterModal() {
@@ -1367,6 +1453,11 @@
     // Modals triggers
     el.addRoutineBtn.addEventListener('click', openAddRoutineModal);
     el.addCalendarTypeBtn.addEventListener('click', openAddCalendarModal);
+    el.calendarsMenuBtn.addEventListener('click', openCalendarsMenuModal);
+    el.menuModalAddCalBtn.addEventListener('click', () => {
+      closeModal(el.calendarsMenuModal);
+      openAddCalendarModal();
+    });
     el.openLayerFilterBtn.addEventListener('click', openLayerFilterModal);
     el.syncAlarmsBtn.addEventListener('click', () => openModal(el.syncModal));
     el.settingsMenuBtn.addEventListener('click', () => openModal(el.settingsModal));

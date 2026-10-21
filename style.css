@@ -248,24 +248,24 @@ html, body {
 .layer-chip {
   display: flex;
   align-items: center;
-  gap: 7px;
-  padding: 7px 14px;
+  gap: 5px;
+  padding: 5px 11px;
   background: var(--bg-card);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-pill);
   color: var(--text-secondary);
-  font-size: 0.82rem;
+  font-size: 0.76rem;
   font-weight: 700;
   white-space: nowrap;
   cursor: pointer;
-  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
   flex-shrink: 0;
 }
 
 .layer-chip .chip-dot {
-  width: 8px;
-  height: 8px;
+  width: 6.5px;
+  height: 6.5px;
   border-radius: 50%;
   display: inline-block;
 }
@@ -296,27 +296,45 @@ html, body {
   opacity: 0.9;
 }
 
-.ribbon-add-btn {
+.ribbon-actions {
   display: flex;
   align-items: center;
-  gap: 5px;
-  padding: 7px 12px;
-  background: var(--bg-card);
-  border: 1px dashed var(--border-highlight);
-  border-radius: var(--radius-pill);
-  color: var(--text-muted);
-  font-size: 0.82rem;
-  font-weight: 700;
-  white-space: nowrap;
-  cursor: pointer;
+  gap: 6px;
   flex-shrink: 0;
-  transition: all 0.2s ease;
+  margin-left: 4px;
 }
 
-.ribbon-add-btn:hover {
+.ribbon-action-btn {
+  width: 29px;
+  height: 29px;
+  border-radius: var(--radius-pill);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  padding: 0;
+}
+
+.ribbon-action-btn:hover {
   background: var(--bg-card-hover);
   color: var(--text-primary);
+  border-color: var(--border-highlight);
+}
+
+.ribbon-action-btn.add-btn {
+  border-style: dashed;
+  border-color: var(--border-highlight);
+  color: var(--text-muted);
+}
+
+.ribbon-action-btn.add-btn:hover {
   border-color: var(--accent-primary);
+  color: var(--text-primary);
 }
 
 /* ========================================================
@@ -1469,6 +1487,133 @@ select {
   border-radius: 50%;
   flex-shrink: 0;
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+}
+
+/* ========================================================
+   Calendars Menu List Modal (3-Dots Menu)
+   ======================================================== */
+.calendars-menu-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.calendars-menu-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 52vh;
+  overflow-y: auto;
+  padding-right: 2px;
+}
+
+.calendars-menu-item {
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 11px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.calendars-menu-item:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: var(--border-highlight);
+  transform: translateY(-1px);
+}
+
+.calendars-menu-item.active-cal {
+  background: var(--item-active-bg, rgba(99, 102, 241, 0.15));
+  border-color: var(--item-active-border, #6366f1);
+}
+
+.menu-item-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.menu-item-emoji {
+  font-size: 1.35rem;
+  line-height: 1;
+}
+
+.menu-item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.menu-item-name {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.menu-item-count {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.menu-item-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.menu-item-active-badge {
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--accent-primary);
+  background: rgba(99, 102, 241, 0.18);
+  border: 1px solid rgba(99, 102, 241, 0.35);
+  padding: 3px 8px;
+  border-radius: var(--radius-pill);
+}
+
+.menu-item-edit-btn {
+  background: transparent;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+  padding: 4px;
+}
+
+.menu-item-edit-btn:hover {
+  opacity: 1;
+}
+
+.menu-add-cal-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px dashed var(--border-highlight);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  color: var(--text-primary);
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 4px;
+}
+
+.menu-add-cal-btn:hover {
+  background: rgba(99, 102, 241, 0.15);
+  border-color: var(--accent-primary);
+  color: #ffffff;
 }
 
 /* Toast Notification */
