@@ -304,6 +304,7 @@
     daysGrid: document.getElementById('days-grid'),
     filterStatusLabel: document.getElementById('active-filter-label'),
     openLayerFilterBtn: document.getElementById('open-layer-filter-btn'),
+    headerFilterBtn: document.getElementById('header-filter-btn'),
     calendarsMenuBtn: document.getElementById('calendars-menu-btn'),
     deckDayBadge: document.getElementById('deck-day-badge'),
     deckDateTitle: document.getElementById('deck-date-title'),
@@ -476,6 +477,18 @@
       const cal = state.calendars.find(c => c.id === state.activeFilter);
       el.filterStatusLabel.textContent = cal ? `Filtered to: ${cal.icon} ${cal.name}` : 'Showing routines';
       el.openLayerFilterBtn.classList.add('hidden');
+    }
+
+    if (el.headerFilterBtn) {
+      const isFiltered = state.activeFilter === 'global' && 
+                         state.visibleLayers.length < state.calendars.length;
+      if (isFiltered) {
+        el.headerFilterBtn.classList.add('has-filter');
+        el.headerFilterBtn.title = `Layer Filter: ${state.visibleLayers.length} of ${state.calendars.length} active (Click to customize)`;
+      } else {
+        el.headerFilterBtn.classList.remove('has-filter');
+        el.headerFilterBtn.title = 'Filter Layers Matrix';
+      }
     }
   }
 
@@ -1459,6 +1472,9 @@
       openAddCalendarModal();
     });
     el.openLayerFilterBtn.addEventListener('click', openLayerFilterModal);
+    if (el.headerFilterBtn) {
+      el.headerFilterBtn.addEventListener('click', openLayerFilterModal);
+    }
     el.syncAlarmsBtn.addEventListener('click', () => openModal(el.syncModal));
     el.settingsMenuBtn.addEventListener('click', () => openModal(el.settingsModal));
     el.exportIcsBtn.addEventListener('click', downloadIcsAlarms);
