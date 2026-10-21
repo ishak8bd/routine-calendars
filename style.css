@@ -142,8 +142,8 @@ html, body {
 
 .month-title-group {
   display: flex;
-  align-items: baseline;
-  gap: 4px;
+  align-items: center;
+  gap: 3px;
   padding: 0 4px;
   cursor: pointer;
   white-space: nowrap;
@@ -161,6 +161,19 @@ html, body {
   color: var(--text-muted);
   font-weight: 600;
   line-height: 1;
+}
+
+.month-title-group .dropdown-chevron {
+  color: var(--text-muted);
+  opacity: 0.65;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  margin-left: 1px;
+}
+
+.month-title-group:hover .dropdown-chevron {
+  color: var(--text-primary);
+  opacity: 1;
+  transform: translateY(1px);
 }
 
 .header-right {
@@ -1643,6 +1656,154 @@ select {
   border-radius: 50%;
   flex-shrink: 0;
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+}
+
+/* ========================================================
+   Month & Year Quick Jump Modal
+   ======================================================== */
+.picker-modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.year-stepper-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 8px 12px;
+}
+
+.year-step-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-pill);
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.year-step-btn:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--border-highlight);
+  transform: scale(1.06);
+}
+
+.year-step-btn:active {
+  transform: scale(0.92);
+}
+
+.year-display-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.year-highlight {
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+
+.year-chips-scroll {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 4px 2px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.year-chips-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.year-chip {
+  padding: 6px 13px;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.year-chip:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-primary);
+  border-color: var(--border-highlight);
+}
+
+.year-chip.active {
+  background: var(--accent-primary);
+  border-color: var(--accent-primary);
+  color: #ffffff;
+  box-shadow: 0 0 12px var(--accent-primary-glow);
+}
+
+.months-picker-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.month-picker-cell {
+  padding: 12px 6px;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.month-picker-cell:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--border-highlight);
+  color: var(--text-primary);
+  transform: translateY(-1px);
+}
+
+.month-picker-cell.active {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.25), rgba(168, 85, 247, 0.25));
+  border-color: var(--accent-primary);
+  color: #ffffff;
+  font-weight: 800;
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.25);
+}
+
+.month-picker-cell.is-current-month::after {
+  content: 'Now';
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--accent-primary);
+  letter-spacing: 0.03em;
+}
+
+.month-picker-cell.active.is-current-month::after {
+  color: #a5b4fc;
 }
 
 /* ========================================================

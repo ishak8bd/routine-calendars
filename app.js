@@ -299,6 +299,7 @@
     prevMonthBtn: document.getElementById('prev-month-btn'),
     nextMonthBtn: document.getElementById('next-month-btn'),
     todayBtn: document.getElementById('today-btn'),
+    monthYearPickerBtn: document.getElementById('month-year-picker-btn'),
     calendarRibbon: document.getElementById('calendar-ribbon'),
     addCalendarTypeBtn: document.getElementById('add-calendar-type-btn'),
     daysGrid: document.getElementById('days-grid'),
@@ -315,6 +316,15 @@
     toast: document.getElementById('toast'),
 
     // Modals
+    monthYearPickerModal: document.getElementById('month-year-picker-modal'),
+    pickerYearVal: document.getElementById('picker-year-val'),
+    pickerPrevYearBtn: document.getElementById('picker-prev-year-btn'),
+    pickerNextYearBtn: document.getElementById('picker-next-year-btn'),
+    yearChipsContainer: document.getElementById('year-chips-container'),
+    monthsPickerGrid: document.getElementById('months-picker-grid'),
+    pickerTodayBtn: document.getElementById('picker-today-btn'),
+    pickerDoneBtn: document.getElementById('picker-done-btn'),
+
     calendarsMenuModal: document.getElementById('calendars-menu-modal'),
     calendarsMenuList: document.getElementById('calendars-menu-list'),
     menuModalAddCalBtn: document.getElementById('menu-modal-add-cal-btn'),
@@ -1033,6 +1043,74 @@
   }
 
   // ==========================================
+  // MONTH & YEAR QUICK JUMP PICKER
+  // ==========================================
+  let pickerTempYear = new Date().getFullYear();
+
+  function openMonthYearPickerModal() {
+    pickerTempYear = state.viewYear;
+    renderMonthYearPicker();
+    openModal(el.monthYearPickerModal);
+  }
+
+  function renderMonthYearPicker() {
+    if (!el.pickerYearVal) return;
+    el.pickerYearVal.textContent = pickerTempYear;
+
+    // Render Year Chips (-3 to +6 years around current / selected year)
+    el.yearChipsContainer.innerHTML = '';
+    const actualCurrentYear = new Date().getFullYear();
+    const startYear = Math.min(actualCurrentYear - 2, pickerTempYear - 2);
+    const endYear = Math.max(actualCurrentYear + 5, pickerTempYear + 4);
+
+    for (let yr = startYear; yr <= endYear; yr++) {
+      const chip = document.createElement('button');
+      chip.type = 'button';
+      chip.className = `year-chip ${yr === pickerTempYear ? 'active' : ''}`;
+      chip.textContent = yr;
+      chip.addEventListener('click', () => {
+        pickerTempYear = yr;
+        renderMonthYearPicker();
+      });
+      el.yearChipsContainer.appendChild(chip);
+    }
+
+    // Smooth scroll active chip into view
+    setTimeout(() => {
+      const activeChip = el.yearChipsContainer.querySelector('.year-chip.active');
+      if (activeChip) {
+        activeChip.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+      }
+    }, 50);
+
+    // Render Months Grid
+    el.monthsPickerGrid.innerHTML = '';
+    const actualToday = new Date();
+    const actualYear = actualToday.getFullYear();
+    const actualMonth = actualToday.getMonth();
+
+    MONTH_NAMES.forEach((name, idx) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      const isCurrentMonth = (pickerTempYear === actualYear && idx === actualMonth);
+      const isSelectedMonth = (pickerTempYear === state.viewYear && idx === state.viewMonth);
+
+      btn.className = `month-picker-cell ${isSelectedMonth ? 'active' : ''} ${isCurrentMonth ? 'is-current-month' : ''}`;
+      btn.innerHTML = `<span>${name.slice(0, 3)}</span>`;
+
+      btn.addEventListener('click', () => {
+        state.viewYear = pickerTempYear;
+        state.viewMonth = idx;
+        renderMonthMatrix();
+        closeModal(el.monthYearPickerModal);
+        showToast(`Jumped to ${MONTH_NAMES[idx]} ${state.viewYear}`);
+      });
+
+      el.monthsPickerGrid.appendChild(btn);
+    });
+  }
+
+  // ==========================================
   // CALENDARS MENU MODAL (3-Dots Sheet)
   // ==========================================
   function openCalendarsMenuModal() {
@@ -1461,6 +1539,63 @@
       state.selectedDate = formatDate(now);
       renderMonthMatrix();
       renderDayDeck();
+    });
+
+    // Month & Year Picker triggers and actions
+    if (el.monthYearPickerBtn) {
+      el.monthYearPickerBtn.addEventListener('click', openMonthYearPickerModal);
+    }
+
+    if (el.pickerPrevYearBtn) {
+      el.pickerPrevYearBtn.addEventListener('click', () => {
+        pickerTempYear--;
+        renderMonthYearPicker();
+      });
+    }
+
+    if (el.pickerNextYearBtn) {
+      el.pickerNextYearBtn.addEventListener('click', () => {
+        pickerTempYear++;
+        renderMonthYearPicker();
+      });
+    }
+
+    if (el.pickerTodayBtn) {
+      el.pickerTodayBtn.addEventListener('click', () => {
+        const now = new Date();
+        state.viewYear = now.getFullYear();
+        state.viewMonth = now.getMonth();
+        state.selectedDate = formatDate(now);
+        renderMonthMatrix();
+        renderDayDeck();
+        closeModal(el.monthYearPickerModal);
+        showToast(`Jumped to ${MONTH_NAMES[state.viewMonth]} ${state.viewYear}`);
+      });
+    }
+
+    if (el.pickerDoneBtn) {
+      el.pickerDoneBtn.addEventListener('click', () => {
+        if (state.viewYear !== pickerTempYear) {
+          state.viewYear = pickerTempYear;
+          renderMonthMatrix();
+          showToast(`Year ${state.viewYear}`);
+        }
+        closeModal(el.monthYearPickerModal);
+      });
+    }
+
+    // Fast Year Keyboard Navigation (PageUp/PageDown, Shift+ArrowLeft/Shift+ArrowRight)
+    window.addEventListener('keydown', (e) => {
+      if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement?.tagName)) return;
+      if (e.key === 'PageUp' || (e.shiftKey && e.key === 'ArrowLeft')) {
+        state.viewYear--;
+        renderMonthMatrix();
+        showToast(`Year ${state.viewYear}`);
+      } else if (e.key === 'PageDown' || (e.shiftKey && e.key === 'ArrowRight')) {
+        state.viewYear++;
+        renderMonthMatrix();
+        showToast(`Year ${state.viewYear}`);
+      }
     });
 
     // Modals triggers
