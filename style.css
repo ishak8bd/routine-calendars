@@ -86,9 +86,9 @@ html, body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  padding-top: calc(28px + var(--safe-top));
+  padding-top: max(52px, calc(38px + env(safe-area-inset-top, 0px))) !important;
   padding-right: 14px;
-  padding-bottom: calc(24px + var(--safe-bottom));
+  padding-bottom: calc(24px + env(safe-area-inset-bottom, 16px));
   padding-left: 14px;
   position: relative;
 }
@@ -100,7 +100,7 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 6px 2px 12px 2px;
+  padding: 8px 2px 14px 2px;
 }
 
 .header-left {
