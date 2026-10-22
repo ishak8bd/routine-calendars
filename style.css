@@ -571,11 +571,11 @@ html, body {
 }
 
 .day-number {
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 700;
   color: var(--text-secondary);
-  width: 22px;
-  height: 22px;
+  width: 23px;
+  height: 23px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -585,14 +585,14 @@ html, body {
 }
 
 .day-cell.today .day-number {
-  background: var(--accent-primary);
-  color: #ffffff;
-  font-weight: 800;
-  box-shadow: 0 0 10px var(--accent-primary-glow);
+  background: #f3f4f6;
+  color: #111215 !important;
+  font-weight: 900;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.35);
 }
 
 .day-cell.selected {
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.08);
   border: 1px solid var(--border-highlight);
 }
 
@@ -602,7 +602,10 @@ html, body {
 }
 
 .day-cell.today.selected .day-number {
-  border: 2px solid #ffffff;
+  background: #ffffff;
+  color: #111215 !important;
+  border: 1.5px solid rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 14px rgba(255, 255, 255, 0.5);
 }
 
 /* Event Title Chips under each day */
