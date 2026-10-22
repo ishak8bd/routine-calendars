@@ -18,18 +18,18 @@
   };
 
   const CURATED_COLORS = [
-    '#6366F1', // Indigo
-    '#F97316', // Coral Orange
+    '#64748B', // Slate Gray
+    '#71717A', // Zinc Graphite
+    '#94A3B8', // Silver
     '#10B981', // Mint Emerald
-    '#EC4899', // Rose Pink
-    '#F59E0B', // Amber Gold
-    '#8B5CF6', // Violet
     '#06B6D4', // Cyan
+    '#3B82F6', // Sky Blue
+    '#F59E0B', // Amber Gold
+    '#F97316', // Coral Orange
     '#14B8A6', // Teal
     '#E11D48', // Crimson
     '#84CC16', // Lime Green
-    '#3B82F6', // Sky Blue
-    '#D946EF'  // Fuchsia
+    '#A1A1AA'  // Light Zinc
   ];
 
   const CURATED_EMOJIS = ['🏋️', '🏃', '💼', '🧖', '🎂', '💊', '📚', '🎸', '🐶', '🌿', '🧹', '🚗', '🧘', '☕'];
@@ -38,10 +38,10 @@
   // INITIAL DEFAULT DATA (If empty)
   // ==========================================
   const DEFAULT_CALENDARS = [
-    { id: 'cal_work', name: 'Work Days', icon: '💼', color: '#6366F1', defaultTime: '08:30' },
-    { id: 'cal_gym', name: 'Gym Days', icon: '🏋️', color: '#F97316', defaultTime: '17:30' },
-    { id: 'cal_running', name: 'Running', icon: '🏃', color: '#10B981', defaultTime: '07:00' },
-    { id: 'cal_hair', name: 'Hair & Face', icon: '🧖', color: '#EC4899', defaultTime: '21:00' },
+    { id: 'cal_work', name: 'Work Days', icon: '💼', color: '#64748B', defaultTime: '08:30' },
+    { id: 'cal_gym', name: 'Gym Days', icon: '🏋️', color: '#10B981', defaultTime: '17:30' },
+    { id: 'cal_running', name: 'Running', icon: '🏃', color: '#06B6D4', defaultTime: '07:00' },
+    { id: 'cal_hair', name: 'Hair & Face', icon: '🧖', color: '#71717A', defaultTime: '21:00' },
     { id: 'cal_birthdays', name: 'Birthdays', icon: '🎂', color: '#F59E0B', defaultTime: '10:00' }
   ];
 
@@ -411,7 +411,7 @@
 
     globalChip.className = `layer-chip ${isGlobal ? 'active' : ''}`;
     globalChip.innerHTML = `
-      <span class="chip-dot" style="background: linear-gradient(135deg, #6366f1, #ec4899);"></span>
+      <span class="chip-dot" style="background: linear-gradient(135deg, #e5e7eb, #9ca3af);"></span>
       <span>🌐 Global${layerCountSuffix}</span>
       <span class="chip-options-trigger" title="Layer Filter Matrix">⚡</span>
     `;
@@ -577,7 +577,7 @@
           const rt = dayRoutines[0];
           const completionKey = `${rt.id}_${dateStr}`;
           const isCompleted = !!state.completed[completionKey];
-          const cal = state.calendars.find(c => c.id === rt.calendarId) || { color: '#6366F1' };
+          const cal = state.calendars.find(c => c.id === rt.calendarId) || { color: '#64748B' };
           const multi = getMultiDayInfo(rt, dateStr);
           const multiClass = multi ? `multi-day ${multi.isStart ? 'range-start' : ''} ${multi.isEnd ? 'range-end' : ''}` : '';
           const titleText = multi ? `${escapeHtml(rt.title)} (${multi.dayIndex}/${multi.totalDays})` : escapeHtml(rt.title);
@@ -596,7 +596,7 @@
           dayRoutines.slice(0, maxVisible).forEach(rt => {
             const completionKey = `${rt.id}_${dateStr}`;
             const isCompleted = !!state.completed[completionKey];
-            const cal = state.calendars.find(c => c.id === rt.calendarId) || { color: '#6366F1' };
+            const cal = state.calendars.find(c => c.id === rt.calendarId) || { color: '#64748B' };
             const multi = getMultiDayInfo(rt, dateStr);
             const multiClass = multi ? `multi-day ${multi.isStart ? 'range-start' : ''} ${multi.isEnd ? 'range-end' : ''}` : '';
             const titleText = multi ? `${escapeHtml(rt.title)} (${multi.dayIndex}/${multi.totalDays})` : escapeHtml(rt.title);
@@ -709,7 +709,7 @@
       const cal = state.calendars.find(c => c.id === rt.calendarId) || {
         name: 'General',
         icon: '📌',
-        color: '#6366f1'
+        color: '#64748B'
       };
 
       const completionKey = `${rt.id}_${state.selectedDate}`;
@@ -775,7 +775,7 @@
     const cal = state.calendars.find(c => c.id === routine.calendarId) || {
       name: 'Routine',
       icon: '📌',
-      color: '#6366F1'
+      color: '#64748B'
     };
 
     // Category Pill styling
@@ -1125,8 +1125,8 @@
     const isGlobal = state.activeFilter === 'global';
     const globalRow = document.createElement('div');
     globalRow.className = `calendars-menu-item ${isGlobal ? 'active-cal' : ''}`;
-    globalRow.style.setProperty('--item-active-bg', 'rgba(99, 102, 241, 0.18)');
-    globalRow.style.setProperty('--item-active-border', '#6366f1');
+    globalRow.style.setProperty('--item-active-bg', 'rgba(255, 255, 255, 0.12)');
+    globalRow.style.setProperty('--item-active-border', '#e5e7eb');
 
     globalRow.innerHTML = `
       <div class="menu-item-left">
@@ -1138,7 +1138,7 @@
       </div>
       <div class="menu-item-right">
         ${isGlobal ? '<span class="menu-item-active-badge">Active</span>' : ''}
-        <span class="layer-color-dot-indicator" style="background: linear-gradient(135deg, #6366f1, #ec4899);"></span>
+        <span class="layer-color-dot-indicator" style="background: linear-gradient(135deg, #e5e7eb, #9ca3af);"></span>
       </div>
     `;
 
@@ -1258,7 +1258,7 @@
     const id = document.getElementById('edit-calendar-id').value || `cal_${Date.now()}`;
     const name = el.calNameInput.value.trim();
     const icon = el.previewEmoji.textContent || '📌';
-    const color = el.selectedCalColor.value || '#6366F1';
+    const color = el.selectedCalColor.value || '#64748B';
     const defaultTime = el.calDefaultTime.value || '09:00';
 
     const existingIdx = state.calendars.findIndex(c => c.id === id);
