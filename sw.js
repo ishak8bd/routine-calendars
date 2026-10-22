@@ -1,10 +1,10 @@
-// RoutineMaster Service Worker (v2.4)
-const CACHE_NAME = 'routinemaster-v2.4';
+// RoutineMaster Service Worker (v2.5)
+const CACHE_NAME = 'routinemaster-v2.5';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
-  './style.css?v=2.4',
-  './app.js?v=2.4',
+  './style.css?v=2.5',
+  './app.js?v=2.5',
   './manifest.json'
 ];
 

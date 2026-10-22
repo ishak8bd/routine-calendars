@@ -1375,6 +1375,32 @@ select {
 }
 
 /* Settings Modal Specifics */
+.small-icon-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 0;
+}
+
+.small-icon-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--text-primary);
+  border-color: var(--border-highlight);
+  transform: rotate(180deg);
+}
+
+.small-icon-btn:active {
+  transform: scale(0.9);
+}
+
 .settings-modal-body {
   display: flex;
   flex-direction: column;

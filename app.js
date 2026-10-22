@@ -378,6 +378,8 @@
     exportIcsBtn: document.getElementById('export-ics-btn'),
 
     settingsModal: document.getElementById('settings-modal'),
+    refreshAppBtn: document.getElementById('refresh-app-btn'),
+    headerRefreshAppBtn: document.getElementById('header-refresh-app-btn'),
     enableWebNotifyBtn: document.getElementById('enable-web-notify-btn'),
     exportJsonBtn: document.getElementById('export-json-btn'),
     importJsonFile: document.getElementById('import-json-file'),
@@ -1442,6 +1444,26 @@
       showToast('Notifications enabled!');
     }
   });
+
+  // ==========================================
+  // APP REFRESH & UPDATE
+  // ==========================================
+  function triggerAppRefresh() {
+    showToast('Checking for updates & refreshing... 🔄');
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistration().then(reg => {
+        if (reg) {
+          reg.update().catch(() => {});
+        }
+      });
+    }
+    setTimeout(() => {
+      window.location.reload();
+    }, 350);
+  }
+
+  el.refreshAppBtn?.addEventListener('click', triggerAppRefresh);
+  el.headerRefreshAppBtn?.addEventListener('click', triggerAppRefresh);
 
   // ==========================================
   // BACKUP & RESTORE (JSON)
