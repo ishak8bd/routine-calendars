@@ -9,7 +9,7 @@
   <meta name="description" content="Clean multi-calendar routine & habit organizer with 100% free native phone alarms">
   <title>RoutineMaster • Multi-Calendar & Routines</title>
   <link rel="manifest" href="manifest.json">
-  <link rel="stylesheet" href="style.css?v=2.6">
+  <link rel="stylesheet" href="style.css?v=2.7">
   <!-- Modern Clean Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -398,9 +398,24 @@
         </div>
 
         <div class="form-group">
-          <label>Accent Color Swatch</label>
+          <div class="color-section-header">
+            <label>Calendar Color Palette</label>
+            <span class="color-count-hint">28 Colors + Custom Picker</span>
+          </div>
           <div class="color-palette-grid" id="color-palette-grid">
-            <!-- 12 curated vibrant colors -->
+            <!-- 28 curated vibrant colors rendered via JS -->
+          </div>
+          <!-- Custom Color Picker Row -->
+          <div class="custom-color-controls">
+            <label class="custom-color-picker-btn" for="custom-hex-picker">
+              <input type="color" id="custom-hex-picker" value="#64748B" class="hidden-color-input">
+              <span class="color-picker-icon">🎨</span>
+              <span>Pick Custom Color...</span>
+            </label>
+            <div class="hex-input-group">
+              <span class="hex-prefix">#</span>
+              <input type="text" id="custom-hex-input" placeholder="64748B" maxlength="6" class="hex-text-input" spellcheck="false" title="Hex Color Code">
+            </div>
           </div>
           <input type="hidden" id="selected-cal-color" value="#64748B">
         </div>
@@ -539,6 +554,6 @@
   <!-- Notification Toast -->
   <div id="toast" class="toast hidden"></div>
 
-  <script src="app.js?v=2.6"></script>
+  <script src="app.js?v=2.7"></script>
 </body>
 </html>

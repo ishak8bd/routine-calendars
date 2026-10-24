@@ -18,18 +18,45 @@
   };
 
   const CURATED_COLORS = [
+    // Neutrals & Monochromes
     '#64748B', // Slate Gray
     '#71717A', // Zinc Graphite
-    '#94A3B8', // Silver
+    '#475569', // Cool Charcoal
+    '#94A3B8', // Silver Mist
+    
+    // Emeralds, Teals & Greens
     '#10B981', // Mint Emerald
-    '#06B6D4', // Cyan
-    '#3B82F6', // Sky Blue
-    '#F59E0B', // Amber Gold
-    '#F97316', // Coral Orange
-    '#14B8A6', // Teal
-    '#E11D48', // Crimson
+    '#059669', // Forest Green
+    '#14B8A6', // Deep Teal
+    '#06B6D4', // Electric Cyan
     '#84CC16', // Lime Green
-    '#A1A1AA'  // Light Zinc
+    '#22C55E', // Fresh Green
+    
+    // Blues & Indigos
+    '#3B82F6', // Royal Sky Blue
+    '#2563EB', // Sapphire Blue
+    '#6366F1', // Indigo Velvet
+    '#4F46E5', // Deep Indigo
+    '#0284C7', // Ocean Blue
+    
+    // Purples & Pinks
+    '#8B5CF6', // Vivid Violet
+    '#A855F7', // Royal Purple
+    '#D946EF', // Electric Fuchsia
+    '#EC4899', // Berry Rose
+    '#F43F5E', // Coral Rose
+    
+    // Warm Oranges, Ambers & Reds
+    '#F59E0B', // Amber Gold
+    '#F97316', // Vibrant Orange
+    '#EA580C', // Rust Orange
+    '#E11D48', // Crimson Red
+    '#DC2626', // Bright Ruby
+    
+    // Earth & Stone
+    '#B45309', // Warm Bronze
+    '#854D0E', // Golden Earth
+    '#57534E'  // Warm Stone
   ];
 
   const CURATED_EMOJIS = ['🏋️', '🏃', '💼', '🧖', '🎂', '💊', '📚', '🎸', '🐶', '🌿', '🧹', '🚗', '🧘', '☕'];
@@ -369,6 +396,8 @@
     emojiPickerGrid: document.getElementById('emoji-picker-grid'),
     customEmojiInput: document.getElementById('custom-emoji-input'),
     colorPaletteGrid: document.getElementById('color-palette-grid'),
+    customHexPicker: document.getElementById('custom-hex-picker'),
+    customHexInput: document.getElementById('custom-hex-input'),
     selectedCalColor: document.getElementById('selected-cal-color'),
     calDefaultTime: document.getElementById('cal-default-time'),
     deleteCalendarBtn: document.getElementById('delete-calendar-btn'),
@@ -419,7 +448,7 @@
     `;
 
     globalChip.addEventListener('click', (e) => {
-      if (e.target.classList.contains('chip-options-trigger')) {
+      if (e.target.closest('.chip-options-trigger')) {
         e.stopPropagation();
         openLayerFilterModal();
       } else {
@@ -455,7 +484,7 @@
 
       // Tap pill body to filter
       chip.addEventListener('click', (e) => {
-        if (e.target.classList.contains('chip-options-trigger')) {
+        if (e.target.closest('.chip-options-trigger')) {
           e.stopPropagation();
           openEditCalendarModal(cal.id);
         } else {
@@ -745,16 +774,16 @@
         </button>
       `;
 
-      // Checkbox action
+      // Checkbox action with generous hit target
       const checkBtn = card.querySelector('.routine-check-btn');
       checkBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         toggleRoutineCompletion(completionKey);
       });
 
-      // Card body opens rich details sheet (notes, steps, alarm info)
-      const leftPart = card.querySelector('.routine-left');
-      leftPart.addEventListener('click', () => {
+      // Entire card tile is responsive to tap events (opens details)
+      card.addEventListener('click', (e) => {
+        if (e.target.closest('.routine-check-btn')) return;
         openEventDetailsModal(rt, state.selectedDate);
       });
 
@@ -991,16 +1020,34 @@
   }
 
   function initColorAndEmojiPickers() {
-    // 1. Color Palette
+    // 1. Color Palette (28 curated modern swatches)
     el.colorPaletteGrid.innerHTML = '';
     CURATED_COLORS.forEach(color => {
       const swatch = document.createElement('div');
       swatch.className = 'color-swatch';
       swatch.style.backgroundColor = color;
-      swatch.dataset.color = color;
+      swatch.dataset.color = color.toLowerCase();
+      swatch.setAttribute('role', 'button');
+      swatch.setAttribute('aria-label', `Color ${color}`);
       swatch.addEventListener('click', () => setSelectedColor(color));
       el.colorPaletteGrid.appendChild(swatch);
     });
+
+    // Custom color picker bindings
+    if (el.customHexPicker) {
+      el.customHexPicker.addEventListener('input', (e) => {
+        setSelectedColor(e.target.value);
+      });
+    }
+
+    if (el.customHexInput) {
+      el.customHexInput.addEventListener('input', (e) => {
+        let val = e.target.value.trim().replace('#', '');
+        if (/^[0-9A-Fa-f]{6}$/.test(val)) {
+          setSelectedColor(`#${val}`);
+        }
+      });
+    }
 
     // 2. Emoji Selector
     el.emojiPickerGrid.innerHTML = '';
@@ -1026,10 +1073,21 @@
   }
 
   function setSelectedColor(color) {
+    if (!color) return;
+    const normalized = color.toLowerCase();
     el.selectedCalColor.value = color;
+
+    if (el.customHexPicker && color.startsWith('#') && color.length === 7) {
+      el.customHexPicker.value = color;
+    }
+    if (el.customHexInput) {
+      el.customHexInput.value = color.replace('#', '').toUpperCase();
+    }
+
     document.querySelectorAll('.color-swatch').forEach(sw => {
-      sw.classList.toggle('selected', sw.dataset.color === color);
+      sw.classList.toggle('selected', sw.dataset.color === normalized);
     });
+
     el.livePreviewPill.style.backgroundColor = color;
     el.livePreviewPill.style.boxShadow = `0 4px 14px ${color}50`;
   }
@@ -1178,7 +1236,8 @@
       `;
 
       row.addEventListener('click', (e) => {
-        if (e.target.classList.contains('menu-item-edit-btn')) {
+        const editBtn = e.target.closest('.menu-item-edit-btn');
+        if (editBtn) {
           e.stopPropagation();
           closeModal(el.calendarsMenuModal);
           openEditCalendarModal(cal.id);
